@@ -1,1 +1,1 @@
-python trainMNIST.py snnRun5
+python trainMNIST.py snnRun8aBand
