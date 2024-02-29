@@ -1,5 +1,6 @@
 import numpy as np
 import time
+import pdb
 import math
 
 def get_mask_pseudo_diagonal_numpy(mask_shape, sparsity, random_state=None,file_name=None):
@@ -28,7 +29,7 @@ def get_mask_pseudo_diagonal_numpy(mask_shape, sparsity, random_state=None,file_
   totalDiag = math.floor(float(elemBudget)/float(diag_length))
   if(mask_shape[0] == 10 and mask_shape[1] == 100):
       totalDiag = 1
-      diag_length = mask_shape[1]
+      diag_length = int(elemBudget)
   print("Element budget is ", elemBudget)
   print("Total Diag count is ", totalDiag)
  
@@ -49,19 +50,49 @@ def get_mask_pseudo_diagonal_numpy(mask_shape, sparsity, random_state=None,file_
 
   start_row = 0
   start_col = 0
-  used_rows.add(0)
+  #used_rows.add(0)
 
-  start_positions.append((0,0))  
+  #start_positions.append((0,0))  
   
-  for i in range(totalDiag-1):
+  '''for i in range(totalDiag):
     start_row = np.random.choice([row for row in range(mask_shape[0]) if row not in used_rows])
     used_rows.add(start_row)
-    start_positions.append((start_row,start_col))
+    start_positions.append((start_row,start_col))'''
   
+  if(mask_shape[0] == 300):
+      bandDiagNum = 7
+  elif(mask_shape[0] == 100):
+      bandDiagNum = 1
+
+  #for i in range(totalDiag-1):
+  if(mask_shape[0] == 300):
+    print("Layer 1 mask")
+    for i in range(1,bandDiagNum+1):
+      start_row = i
+      #start_row = np.random.choice([row for row in range(mask_shape[0]) if row not in used_rows])
+      used_rows.add(start_row)
+      start_positions.append((start_row,start_col))
+    
+    for i in range(totalDiag-bandDiagNum-1):
+      start_row = np.random.choice([row for row in range(mask_shape[0]) if row not in used_rows])
+      start_positions.append((start_row,start_col))
+  elif(mask_shape[0] == 100):
+    print("Layer 2 mask")
+    for i in range(1,bandDiagNum+1):
+      start_row = i
+      #start_row = np.random.choice([row for row in range(mask_shape[0]) if row not in used_rows])
+      used_rows.add(start_row)
+      start_positions.append((start_row,start_col))
+    
+    for i in range(totalDiag-bandDiagNum-1):
+      start_row = np.random.choice([row for row in range(mask_shape[0]) if row not in used_rows])
+      start_positions.append((start_row,start_col))
+
+
   r = [start_positions[i][0] for i in range(len(start_positions))]
   print(r)
 
-  #pdb.set_trace()
+  pdb.set_trace()
   for start_row in r:
     current_row, current_col = (start_row)% mask_shape[0], 0
     #print(start_row, start_col)
@@ -82,4 +113,3 @@ def get_mask_pseudo_diagonal_numpy(mask_shape, sparsity, random_state=None,file_
 
   print("Number of non-zeros: ", np.count_nonzero(mask))
   return mask
-
