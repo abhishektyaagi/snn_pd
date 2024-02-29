@@ -28,7 +28,7 @@ def get_mask_pseudo_diagonal_numpy(mask_shape, sparsity, random_state=None,file_
   totalDiag = math.floor(float(elemBudget)/float(diag_length))
   if(mask_shape[0] == 10 and mask_shape[1] == 100):
       totalDiag = 1
-      diag_length = mask_shape[1]
+      diag_length = int(elemBudget)
   print("Element budget is ", elemBudget)
   print("Total Diag count is ", totalDiag)
  
@@ -49,11 +49,11 @@ def get_mask_pseudo_diagonal_numpy(mask_shape, sparsity, random_state=None,file_
 
   start_row = 0
   start_col = 0
-  used_rows.add(0)
+  #used_rows.add(0)
 
-  start_positions.append((0,0))  
+  #start_positions.append((0,0))  
   
-  for i in range(totalDiag-1):
+  for i in range(totalDiag):
     start_row = np.random.choice([row for row in range(mask_shape[0]) if row not in used_rows])
     used_rows.add(start_row)
     start_positions.append((start_row,start_col))
@@ -82,4 +82,3 @@ def get_mask_pseudo_diagonal_numpy(mask_shape, sparsity, random_state=None,file_
 
   print("Number of non-zeros: ", np.count_nonzero(mask))
   return mask
-
